@@ -5,7 +5,7 @@
 
 // ---------- Settings you can change ----------
 
-var GOAL_MINUTES = 240;       // your daily goal in minutes
+var GOAL_MINUTES = 250;       // your daily goal in minutes
 var SAMPLE_HISTORY = false;   // true = fill past days with fake data (to test the heatmap)
 
 var STORAGE_KEY = 'focuslog.v1';

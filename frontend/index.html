@@ -1,118 +1,149 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>focus.log</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
-  <script>
-    // set theme before paint to avoid a flash
-    try {
-      const s = JSON.parse(localStorage.getItem('focuslog.v1') || '{}');
-      const t = s.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      document.documentElement.dataset.theme = t;
-    } catch (e) {}
-  </script>
-</head>
-<body>
-  <div class="page">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>focus.log</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+    <script>
+      // set theme before paint to avoid a flash
+      try {
+        const s = JSON.parse(localStorage.getItem("focuslog.v1") || "{}");
+        const t =
+          s.theme ||
+          (matchMedia("(prefers-color-scheme: dark)").matches
+            ? "dark"
+            : "light");
+        document.documentElement.dataset.theme = t;
+      } catch (e) {}
+    </script>
+  </head>
+  <body>
+    <div class="page">
+      <header class="top">
+        <div class="brand">
+          <span class="swatch"></span>
+          <span class="name">focus.log</span>
+          <span class="muted">/ <span id="today"></span></span>
+        </div>
+        <div class="stats">
+          <span><b id="streak">0</b> day streak</span>
+          <span><b id="longest">0</b> longest</span>
+          <span><b id="year">0h</b> this year</span>
+          <button id="themeBtn" class="theme-btn" type="button"></button>
+        </div>
+      </header>
 
-    <header class="top">
-      <div class="brand">
-        <span class="swatch"></span>
-        <span class="name">focus.log</span>
-        <span class="muted">/ <span id="today"></span></span>
-      </div>
-      <div class="stats">
-        <span><b id="streak">0</b> day streak</span>
-        <span><b id="longest">0</b> longest</span>
-        <span><b id="year">0h</b> this year</span>
-        <button id="themeBtn" class="theme-btn" type="button"></button>
-      </div>
-    </header>
-
-    <main class="grid">
-      <section class="card timer">
-        <div class="row">
-          <div class="seg" id="modes">
-            <button type="button" data-mode="stopwatch">Stopwatch</button>
-            <button type="button" data-mode="countdown">Timer</button>
+      <main class="grid">
+        <section class="card timer">
+          <div class="row">
+            <div class="seg" id="modes">
+              <button type="button" data-mode="stopwatch">Stopwatch</button>
+              <button type="button" data-mode="countdown">Timer</button>
+            </div>
+            <div class="status">
+              <span class="dot" id="dot"></span><span id="status">idle</span>
+            </div>
           </div>
-          <div class="status"><span class="dot" id="dot"></span><span id="status">idle</span></div>
-        </div>
 
-        <div class="presets" id="presets" hidden>
-          <button type="button" data-min="15">15m</button>
-          <button type="button" data-min="25">25m</button>
-          <button type="button" data-min="45">45m</button>
-          <button type="button" data-min="60">60m</button>
-          <button type="button" data-min="90">90m</button>
-          <label class="custom">
-            <input id="customMin" type="number" min="1" max="600">
-            <span>min</span>
+          <div class="presets" id="presets" hidden>
+            <button type="button" data-min="15">15m</button>
+            <button type="button" data-min="25">25m</button>
+            <button type="button" data-min="45">45m</button>
+            <button type="button" data-min="60">60m</button>
+            <button type="button" data-min="90">90m</button>
+            <label class="custom">
+              <input id="customMin" type="number" min="1" max="600" />
+              <span>min</span>
+            </label>
+          </div>
+
+          <label class="task">
+            <span>task:</span>
+            <input
+              id="task"
+              type="text"
+              placeholder="what are you working on?"
+              autocomplete="off"
+            />
           </label>
+
+          <div class="clock-wrap">
+            <div class="clock" id="clock">00:00</div>
+            <div class="bar"><div id="progress"></div></div>
+          </div>
+
+          <div class="actions">
+            <button id="startBtn" class="btn primary" type="button">
+              Start
+            </button>
+            <button id="logBtn" class="btn" type="button">Log session</button>
+            <button id="discardBtn" class="btn ghost" type="button">
+              Discard
+            </button>
+          </div>
+        </section>
+
+        <aside class="card side">
+          <div class="today">
+            <div class="label">Today</div>
+            <div class="today-total" id="todayTotal">0m</div>
+            <div class="goal-line">
+              <span>goal <span id="goalLabel"></span></span
+              ><span id="goalPct">0%</span>
+            </div>
+            <div class="goal-cells" id="goalCells"></div>
+          </div>
+          <div class="log-wrap">
+            <div class="log-head">
+              <span id="logTitle">Sessions today</span
+              ><span class="mono" id="logTotal">0m</span>
+            </div>
+            <ul class="log" id="log"></ul>
+            <p class="empty" id="logEmpty"></p>
+          </div>
+        </aside>
+      </main>
+
+      <section class="card heat-card">
+        <div class="heat-head">
+          <div class="heat-title">
+            <span id="yearTitle">0h</span> of focus in the last year
+          </div>
+          <div class="mono muted small" id="hover"></div>
         </div>
-
-        <label class="task">
-          <span>task:</span>
-          <input id="task" type="text" placeholder="what are you working on?" autocomplete="off">
-        </label>
-
-        <div class="clock-wrap">
-          <div class="clock" id="clock">00:00</div>
-          <div class="bar"><div id="progress"></div></div>
+        <div class="heat-scroll">
+          <div class="heat-wrap">
+            <div class="months" id="months"></div>
+            <div class="heat-body">
+              <div class="weekdays">
+                <span></span><span>Mon</span><span></span><span>Wed</span
+                ><span></span><span>Fri</span><span></span>
+              </div>
+              <div class="heat" id="heat"></div>
+            </div>
+          </div>
         </div>
-
-        <div class="actions">
-          <button id="startBtn" class="btn primary" type="button">Start</button>
-          <button id="logBtn" class="btn" type="button">Log session</button>
-          <button id="discardBtn" class="btn ghost" type="button">Discard</button>
+        <div class="heat-foot">
+          <span
+            >Click a day to see its sessions. Levels are relative to your daily
+            goal.</span
+          >
+          <div class="legend">
+            <span>Less</span>
+            <i class="l0"></i><i class="l1"></i><i class="l2"></i
+            ><i class="l3"></i><i class="l4"></i>
+            <span>More</span>
+          </div>
         </div>
       </section>
-
-      <aside class="card side">
-        <div class="today">
-          <div class="label">Today</div>
-          <div class="today-total" id="todayTotal">0m</div>
-          <div class="goal-line"><span>goal <span id="goalLabel"></span></span><span id="goalPct">0%</span></div>
-          <div class="goal-cells" id="goalCells"></div>
-        </div>
-        <div class="log-wrap">
-          <div class="log-head"><span id="logTitle">Sessions today</span><span class="mono" id="logTotal">0m</span></div>
-          <ul class="log" id="log"></ul>
-          <p class="empty" id="logEmpty"></p>
-        </div>
-      </aside>
-    </main>
-
-    <section class="card heat-card">
-      <div class="heat-head">
-        <div class="heat-title"><span id="yearTitle">0h</span> of focus in the last year</div>
-        <div class="mono muted small" id="hover"></div>
-      </div>
-      <div class="heat-scroll">
-        <div class="heat-wrap">
-          <div class="months" id="months"></div>
-          <div class="heat-body">
-            <div class="weekdays"><span></span><span>Mon</span><span></span><span>Wed</span><span></span><span>Fri</span><span></span></div>
-            <div class="heat" id="heat"></div>
-          </div>
-        </div>
-      </div>
-      <div class="heat-foot">
-        <span>Click a day to see its sessions. Levels are relative to your daily goal.</span>
-        <div class="legend">
-          <span>Less</span>
-          <i class="l0"></i><i class="l1"></i><i class="l2"></i><i class="l3"></i><i class="l4"></i>
-          <span>More</span>
-        </div>
-      </div>
-    </section>
-
-  </div>
-  <script src="app.js"></script>
-</body>
+    </div>
+    <script src="app.js"></script>
+  </body>
 </html>
