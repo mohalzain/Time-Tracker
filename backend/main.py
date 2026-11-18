@@ -1,14 +1,9 @@
-from flask import Flask
-from flask import request
-
-app = Flask('task')
+from fastapi import FastAPI
 
 
-
-@app.route('/',methods=['GET'])
-def main(name):
-    return name
+app = FastAPI()
 
 
-app.run()
-
+@app.get('/')
+def home():
+    return {'msg':'hi'}
